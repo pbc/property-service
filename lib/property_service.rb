@@ -1,0 +1,7 @@
+module PropertyService
+end
+
+require_relative "property_service/entities"
+require_relative "property_service/utils"
+require_relative "property_service/data_suppliers"
+require_relative "property_service/property_search"
