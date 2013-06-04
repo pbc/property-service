@@ -1,6 +1,11 @@
+require "json"
 module PropertyService
   module DataSuppliers
     class PropertyData
+
+      def all
+        data
+      end
 
       def find_in_proximity(options)
         query_options = {
@@ -24,7 +29,7 @@ module PropertyService
 
       def select_location_options(options)
         options.select do |key, value|
-          [:latitude, :longitude].include? key
+          [:latitude, :longitude].include? key.to_sym
         end
       end
 
@@ -35,38 +40,11 @@ module PropertyService
       end
 
       def data
-        [
-          {
-            name: "Sizeable house",
-            bedroom_count: 2,
-            latitude: 51.501000,
-            longitude: -0.142000
-          },
-          {
-            name: "Trendy flat",
-            bedroom_count: 2,
-            latitude: 51.523778,
-            longitude: -0.205500
-          },
-          {
-            name: "Flat with stunning view",
-            bedroom_count: 2,
-            latitude: 51.504444,
-            longitude: -0.086667
-          },
-          {
-            name: "Unique flat",
-            bedroom_count: 1,
-            latitude: 51.538333,
-            longitude: -0.013333
-          },
-          {
-            name: "Isolated house",
-            bedroom_count: 1,
-            latitude: 50.066944,
-            longitude: -5.746944
-          }
-        ]
+        JSON.parse(IO.read(data_file_path),:symbolize_names => true)
+      end
+
+      def data_file_path
+        ::PropertyService::Config.instance.properties_source_json_file
       end
     end
   end
