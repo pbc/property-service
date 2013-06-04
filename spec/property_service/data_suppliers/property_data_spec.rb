@@ -2,19 +2,60 @@ require "spec_helper"
 
 describe PropertyService::DataSuppliers::PropertyData do
 
-  let(:property_data_supplier) { PropertyService::DataSuppliers::PropertyData }
-  let(:find_in_proximity_options) {
-    {
-      :proximity => 1.0,
-      :longitude => 0.0,
-      :latitude => 0.0
-    }
+  let(:instance) { PropertyService::DataSuppliers::PropertyData.new }
+
+  let(:proximity_search_params) { {
+    :latitude => latitude,
+    :longitude => longitude,
+    :proximity => proximity
+  } }
+
+  let(:proximity) { 20.0 }
+
+  let(:similarity_search_params) {
+    proximity_search_params.merge({
+      :min_bedroom_count => min_bedroom_count
+    })
   }
 
-  context "#find_in_proximity" do
-    it "" do
+  let(:min_bedroom_count) { 2 }
 
+  let(:latitude) { "51.501000" }
+  let(:longitude) { "-0.142000" }
+
+  let(:search_results) { [property_1, property_2, property_3, property_4] }
+  let(:property_1) { (PropertyFixtures.all_properties)[0] }
+  let(:property_2) { (PropertyFixtures.all_properties)[1] }
+  let(:property_3) { (PropertyFixtures.all_properties)[2] }
+  let(:property_4) { (PropertyFixtures.all_properties)[3] }
+
+
+
+  context "#find_in_proximity" do
+    context "no properties in the area" do
+      let(:longitude) { "99.00" }
+      let(:latitude) { "-99.00" }
+
+      it "returns an empty result set" do
+        expect(instance.find_in_proximity(proximity_search_params)).to eq []
+      end
+    end
+
+    context "available properties in the area" do
+      it "returns nearby properties based on provided location" do
+        expect(instance.find_in_proximity(proximity_search_params)).to eq search_results
+      end
     end
   end
 
+  context "#find_similar_properties" do
+    context "there are no similar properties available" do
+
+      let(:min_bedroom_count) { 2000 }
+
+      it "returns an empty result set" do
+        expect(instance.find_similar_properties(similarity_search_params)).to eq []
+      end
+    end
+  end
 end
