@@ -1,6 +1,8 @@
 # property-service
 
+(programing excercise)
 
+This application performs proximity and similarity searches on preformatted property data
 
 ## Contributing to property-service
 
