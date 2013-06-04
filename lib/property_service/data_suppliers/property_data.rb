@@ -15,8 +15,6 @@ module PropertyService
           :min_bedroom_count => 1
         }.merge(options)
 
-        STDOUT.puts options
-
         filtered_data = filter_data_by_proximity(data, options)
         filtered_data = filter_data_by_bedroom_count(filtered_data, options)
         filtered_data
